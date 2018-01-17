@@ -616,5 +616,8 @@ class CodeGenerator(object):
         
         print('from sqlalchemy.dialects.postgresql.base import DOUBLE_PRECISION, INTEGER')
         print('from sqlalchemy.dialects.postgresql import JSONB')
+        # Remove JSON import:
+        output = output.replace(', JSON', '')
+        # Replace JSON usages by JSONB:
         output = output.replace('JSON', 'JSONB')
         print(output, file=outfile)
