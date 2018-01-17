@@ -22,6 +22,7 @@ def main():
     parser.add_argument('--nojoined', action='store_true', help="don't autodetect joined table inheritance")
     parser.add_argument('--noinflect', action='store_true', help="don't try to convert tables names to singular form")
     parser.add_argument('--noclasses', action='store_true', help="don't generate classes, only tables")
+    parser.add_argument('--onlyclasses', action='store_true', help="don't generate tables, only classes")
     parser.add_argument('--outfile', help='file to write output to (default: stdout)')
     args = parser.parse_args()
 
@@ -40,5 +41,9 @@ def main():
     metadata.reflect(engine, args.schema, not args.noviews, tables)
     outfile = codecs.open(args.outfile, 'w', encoding='utf-8') if args.outfile else sys.stdout
     generator = CodeGenerator(metadata, args.noindexes, args.noconstraints, args.nojoined, args.noinflect,
-                              args.noclasses)
+                              args.noclasses, onlyclasses=args.onlyclasses)
     generator.render(outfile)
+
+
+if __name__ == '__main__':
+    main()

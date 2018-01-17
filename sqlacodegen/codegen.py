@@ -296,7 +296,7 @@ class CodeGenerator(object):
     def __init__(self, metadata, noindexes=False, noconstraints=False, nojoined=False, noinflect=False,
                  noclasses=False, indentation='    ', model_separator='\n\n',
                  ignored_tables=('alembic_version', 'migrate_version'), table_model=ModelTable, class_model=ModelClass,
-                 template=None):
+                 template=None, onlyclasses=False):
         super(CodeGenerator, self).__init__()
         self.metadata = metadata
         self.noindexes = noindexes
@@ -367,8 +367,12 @@ class CodeGenerator(object):
                                     table.c[colname].type = Enum(*options, native_enum=False)
                                 continue
 
+            # NOTE: ThirdEye modification (onlyclasses):
             # Only form model classes for tables that have a primary key and are not association tables
-            if noclasses or not table.primary_key or table.name in association_tables:
+            if onlyclasses:
+                model = self.class_model(table, links[table.name], self.inflect_engine, not nojoined)
+                classes[model.name] = model
+            elif noclasses or not table.primary_key or table.name in association_tables:
                 model = self.table_model(table)
             else:
                 model = self.class_model(table, links[table.name], self.inflect_engine, not nojoined)
