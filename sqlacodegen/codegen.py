@@ -613,4 +613,8 @@ class CodeGenerator(object):
         output = self.template.format(imports=self.render_imports(),
                                       metadata_declarations=self.render_metadata_declarations(),
                                       models=self.model_separator.join(rendered_models).rstrip('\n'))
+        
+        print('from sqlalchemy.dialects.postgresql.base import DOUBLE_PRECISION, INTEGER')
+        print('from sqlalchemy.dialects.postgresql import JSONB')
+        output = output.replace('JSON', 'JSONB')
         print(output, file=outfile)
