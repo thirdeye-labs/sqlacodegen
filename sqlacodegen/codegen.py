@@ -369,7 +369,7 @@ class CodeGenerator(object):
 
             # NOTE: ThirdEye modification (onlyclasses):
             # Only form model classes for tables that have a primary key and are not association tables
-            if onlyclasses:
+            if onlyclasses and table.primary_key:
                 model = self.class_model(table, links[table.name], self.inflect_engine, not nojoined)
                 classes[model.name] = model
             elif noclasses or not table.primary_key or table.name in association_tables:
